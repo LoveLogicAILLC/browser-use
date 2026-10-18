@@ -12,6 +12,8 @@ from langchain_core.messages import AIMessage, HumanMessage
 from pydantic import BaseModel
 
 from browser_use.agent.views import ActionResult, AgentHistory, AgentOutput
+from browser_use.browser.browser import BrowserConfig
+from browser_use.browser.context import BrowserContextConfig
 from browser_use.browser.views import BrowserState
 
 
@@ -223,6 +225,7 @@ class MockBrowser:
 		self.pages: List[MagicMock] = [self._create_mock_page()]
 		self.current_page_index = 0
 		self.closed = False
+		self.config = BrowserConfig(headless=True, disable_security=True)
 
 	def _create_mock_page(self) -> MagicMock:
 		"""Create a mock page object."""
