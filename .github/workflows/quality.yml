@@ -22,7 +22,8 @@ jobs:
           python-version: '3.11'
 
       - name: Install Ruff
-        run: pip install --only-binary :all: "ruff==0.17.1"
+        run: |
+          pip install --only-binary :all: "ruff==0.17.1"
 
       - name: Run Ruff linter
         run: ruff check --output-format=github .
@@ -44,10 +45,11 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install dependencies
+      - name: Install package in dev mode
+        run: pip install -e ".[dev]"  # NOSONAR
+
+      - name: Install mypy
         run: |
-          python -m pip install --upgrade pip # NOSONAR
-          pip install -e ".[dev]" # NOSONAR
           pip install --only-binary :all: "mypy==2.4.0" "types-requests==2.33.0.20261006"
 
       - name: Run mypy
@@ -92,7 +94,8 @@ jobs:
           python-version: '3.11'
 
       - name: Install isort
-        run: pip install --only-binary :all: "isort==9.0.2"
+        run: |
+          pip install --only-binary :all: "isort==9.0.2"
 
       - name: Check import sorting
         run: isort --check-only --profile black browser_use
@@ -112,7 +115,8 @@ jobs:
           python-version: '3.11'
 
       - name: Install interrogate
-        run: pip install --only-binary :all: "interrogate==1.7.0"
+        run: |
+          pip install --only-binary :all: "interrogate==1.7.0"
 
       - name: Check docstring coverage
         run: |
