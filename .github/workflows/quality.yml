@@ -22,7 +22,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Ruff
-        run: pip install ruff
+        run: pip install "ruff>=0.3.0"
 
       - name: Run Ruff linter
         run: ruff check --output-format=github .
@@ -70,7 +70,7 @@ jobs:
 
       - name: Install tools
         run: |
-          pip install radon xenon
+          pip install "radon>=6.0.1" "xenon>=0.9.0"
 
       - name: Check cyclomatic complexity
         run: |
@@ -92,7 +92,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install isort
-        run: pip install isort
+        run: pip install "isort>=5.13.0"
 
       - name: Check import sorting
         run: isort --check-only --profile black browser_use
@@ -112,7 +112,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install interrogate
-        run: pip install interrogate
+        run: pip install "interrogate>=1.5.0"
 
       - name: Check docstring coverage
         run: |

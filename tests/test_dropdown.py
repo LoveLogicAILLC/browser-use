@@ -20,22 +20,20 @@ async def test_dropdown(llm, browser_context):
 		browser_context=browser_context,
 	)
 
+	result = None
+	element = None
 	try:
 		history: AgentHistoryList = await agent.run(20)
 		result = history.final_result()
-
-		# Verify dropdown interaction
-		assert result is not None
-		assert 'Duck' in result, "Expected 5th option 'Duck' to be selected"
-
-		# Verify dropdown state
 		element = await browser_context.get_element_by_selector('select')
-		assert element is not None, 'Dropdown element should exist'
-
-		value = await element.evaluate('el => el.value')
-		assert value == '5', 'Dropdown should have 5th option selected'
-
 	except Exception as e:
 		pytest.fail(f'Dropdown test failed: {str(e)}')
 	finally:
 		await browser_context.close()
+
+	assert result is not None
+	assert 'Duck' in result, "Expected 5th option 'Duck' to be selected"
+	assert element is not None, 'Dropdown element should exist'
+
+	value = await element.evaluate('el => el.value')
+	assert value == '5', 'Dropdown should have 5th option selected'

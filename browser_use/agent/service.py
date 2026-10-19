@@ -1156,7 +1156,6 @@ class Agent:
 
 		# Draw task text with increased spacing
 		margin = 80  # Increased margin
-		width - (2 * margin)
 
 		# Create rounded rectangle for goal text
 		text_padding = 20

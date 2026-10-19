@@ -363,8 +363,6 @@ class Controller:
 			logger.debug(f'Element attributes: {dom_element.attributes}')
 			logger.debug(f'Element tag: {dom_element.tag_name}')
 
-			'//' + dom_element.xpath
-
 			try:
 				frame_index = 0
 				for frame in page.frames:
