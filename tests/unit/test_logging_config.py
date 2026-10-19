@@ -43,11 +43,13 @@ class TestAddLoggingLevel:
 class TestSetupLogging:
 	def test_setup_logging_runs_without_error(self):
 		"""setup_logging is idempotent when called multiple times."""
+		import logging
+
 		from browser_use.logging_config import setup_logging
 
-		# Should not raise even when called again
 		setup_logging()
 		setup_logging()
+		assert logging.getLogger('browser_use') is not None
 
 	def test_browser_use_logger_exists(self):
 		"""browser_use logger is configured after setup."""

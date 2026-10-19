@@ -103,10 +103,11 @@ class TestProductTelemetryDisabled:
 
 		try:
 			event = AgentStepTelemetryEvent(agent_id='x', step=1, step_error=[], consecutive_failures=0, actions=[])
-			# Should not raise when client is None
 			telemetry.capture(event)
+			captured = True
 		finally:
 			telemetry._posthog_client = original_client  # restore
+		assert captured
 
 	def test_user_id_returns_string(self):
 		"""user_id property should return a non-empty string."""
@@ -127,7 +128,8 @@ class TestProductTelemetryDisabled:
 
 		try:
 			event = AgentStepTelemetryEvent(agent_id='y', step=3, step_error=[], consecutive_failures=0, actions=[])
-			# Should complete without error
 			telemetry._direct_capture(event)
+			completed = True
 		finally:
 			telemetry._posthog_client = original_client
+		assert completed
