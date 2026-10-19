@@ -1,5 +1,6 @@
 import asyncio
 import os
+from urllib.parse import urlparse
 
 import pytest
 from langchain_openai import AzureChatOpenAI
@@ -108,7 +109,8 @@ async def test_error_recovery(llm, context):
 	for action in actions:
 		if 'go_to_url' in action:
 			assert 'url' in action['go_to_url'], 'url is not in go_to_url'
-			assert action['go_to_url']['url'].endswith('google.com'), 'url does not end with google.com'
+			parsed = urlparse(action['go_to_url']['url'])
+			assert parsed.hostname in ('google.com', 'www.google.com'), 'url hostname is not google.com'
 			break
 
 

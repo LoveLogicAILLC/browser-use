@@ -41,13 +41,13 @@ class SlackBot:
 
 	async def handle_event(self, event, event_id):
 		try:
-			logger.info(f'Received event id: {event_id}')
+			logger.info(f'Received event id: {event_id!r}')
 			if not event_id:
 				logger.warning('Event ID missing in event data')
 				return
 
 			if event_id in self.processed_events:
-				logger.info(f'Event {event_id} already processed')
+				logger.info(f'Event {event_id!r} already processed')
 				return
 			self.processed_events.add(event_id)
 
@@ -108,7 +108,7 @@ async def slack_events(request: Request, slack_bot: SlackBot = Depends()):
 			raise HTTPException(status_code=400, detail='Request verification failed')
 
 		event_data = await request.json()
-		logger.info(f'Received event data: {event_data}')
+		logger.info(f'Received event keys: {list(event_data.keys())!r}')
 		if 'challenge' in event_data:
 			return {'challenge': event_data['challenge']}
 
