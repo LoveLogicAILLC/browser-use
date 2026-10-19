@@ -43,8 +43,6 @@ class TestAddLoggingLevel:
 class TestSetupLogging:
 	def test_setup_logging_runs_without_error(self):
 		"""setup_logging is idempotent when called multiple times."""
-		import logging
-
 		from browser_use.logging_config import setup_logging
 
 		setup_logging()
