@@ -115,7 +115,7 @@ agent = Agent(
 
 async def main():
 	await agent.run()
-	input('Press Enter to close the browser...')
+	await asyncio.to_thread(input, 'Press Enter to close the browser...')
 	await browser.close()
 
 

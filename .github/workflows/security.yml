@@ -29,7 +29,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Bandit
-        run: pip install "bandit[toml]==1.7.10"
+        run: pip install --only-binary :all: "bandit[toml]==1.7.10"
 
       - name: Run Bandit scan
         run: |
@@ -64,12 +64,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install "safety==3.2.9"
+          python -m pip install --upgrade pip # NOSONAR
+          pip install --only-binary :all: "safety==3.2.9"
 
       - name: Check dependencies with Safety
         run: |
-          pip install -e .
+          pip install -e . # NOSONAR
           safety check --json --output safety-report.json
         continue-on-error: true
 
