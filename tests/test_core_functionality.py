@@ -9,6 +9,8 @@ from browser_use.agent.service import Agent
 from browser_use.agent.views import AgentHistoryList
 from browser_use.browser.browser import Browser, BrowserConfig
 
+pytestmark = pytest.mark.skip(reason='integration test: requires Azure OpenAI credentials')
+
 
 @pytest.fixture(scope='function')
 def event_loop():
