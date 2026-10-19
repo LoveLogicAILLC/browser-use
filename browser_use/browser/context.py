@@ -548,7 +548,7 @@ class BrowserContext:
 				for allowed_domain in self.config.allowed_domains
 			)
 		except Exception as e:
-			logger.error(f'Error checking URL allowlist: {str(e)}')
+			logger.error(f'Error checking URL allowlist: {type(e).__name__}')
 			return False
 
 	async def _check_and_handle_navigation(self, page: Page) -> None:
@@ -929,7 +929,7 @@ class BrowserContext:
 					return element_handle
 				return None
 		except Exception as e:
-			logger.error(f'Failed to locate element: {str(e)}')
+			logger.error(f'Failed to locate element: {type(e).__name__}')
 			return None
 
 	async def _input_text_element_node(self, element_node: DOMElementNode, text: str):

@@ -172,7 +172,7 @@ class Browser:
 			)
 			return browser
 		except Exception as e:
-			logger.error(f'Failed to start a new Chrome instance.: {str(e)}')
+			logger.error(f'Failed to start a new Chrome instance.: {type(e).__name__}')
 			raise RuntimeError(
 				' To start chrome in Debug mode, you need to close all existing Chrome instances and try again otherwise we can not connect to the instance.'  # noqa: E501
 			)
