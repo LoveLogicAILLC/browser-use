@@ -1,3 +1,4 @@
+from inspect import signature as get_signature
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
 import pytest
@@ -183,16 +184,22 @@ class TestRegistry:
 		async def test_action_without_browser(param1: str):
 			return f'Action executed with {param1}'
 
-		# Register the actions — spec= preserves the function signature so the
-		# registry's signature inspection correctly detects the 'browser' parameter.
+		# Explicitly set __signature__ so inspect.signature() returns the real
+		# function's parameters — this is what the registry uses to detect 'browser'.
+		mock_with_browser = AsyncMock(side_effect=test_action_with_browser)
+		mock_with_browser.__signature__ = get_signature(test_action_with_browser)
+
+		mock_without_browser = AsyncMock(side_effect=test_action_without_browser)
+		mock_without_browser.__signature__ = get_signature(test_action_without_browser)
+
 		registry.registry.actions['test_action_with_browser'] = MagicMock(
-			function=AsyncMock(spec=test_action_with_browser, side_effect=test_action_with_browser),
+			function=mock_with_browser,
 			param_model=TestActionModel,
 			description='Test action with browser',
 		)
 
 		registry.registry.actions['test_action_without_browser'] = MagicMock(
-			function=AsyncMock(spec=test_action_without_browser, side_effect=test_action_without_browser),
+			function=mock_without_browser,
 			param_model=TestActionModel,
 			description='Test action without browser',
 		)
