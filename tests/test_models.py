@@ -19,9 +19,10 @@ from langchain_ollama import ChatOllama  # noqa: E402
 
 pytestmark = pytest.mark.skip(reason='integration test: requires LLM credentials')
 
-api_key_gemini = SecretStr(os.getenv('GEMINI_API_KEY') or '')
-api_key_deepseek = SecretStr(os.getenv('DEEPSEEK_API_KEY') or '')
-api_key_anthropic = SecretStr(os.getenv('ANTHROPIC_API_KEY') or '')
+api_key_gemini = SecretStr(os.getenv('GEMINI_API_KEY') or 'placeholder')
+api_key_deepseek = SecretStr(os.getenv('DEEPSEEK_API_KEY') or 'placeholder')
+api_key_anthropic = SecretStr(os.getenv('ANTHROPIC_API_KEY') or 'placeholder')
+api_key_openai = SecretStr(os.getenv('OPENAI_API_KEY') or 'placeholder')
 
 
 @pytest.fixture(scope='function')
@@ -73,8 +74,8 @@ async def context(browser):
 			stop=None,
 			api_key=api_key_anthropic,
 		),
-		ChatOpenAI(model='gpt-4o'),
-		ChatOpenAI(model='gpt-4o-mini'),
+		ChatOpenAI(model='gpt-4o', api_key=api_key_openai),
+		ChatOpenAI(model='gpt-4o-mini', api_key=api_key_openai),
 		AzureChatOpenAI(
 			model='gpt-4o',
 			api_version='2024-10-21',
