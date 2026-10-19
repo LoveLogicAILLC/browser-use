@@ -28,6 +28,7 @@ dependencies = [
     "requests>=2.32.3",
     "posthog>=3.7.0",
     "playwright>=1.49.0",
+    "Pillow>=10.0.0",
     "setuptools>=75.8.0",
     "lmnr[langchain]>=0.4.59",
     "markdownify==0.14.1"
@@ -58,6 +59,17 @@ dev = [
 line-length = 130
 select = ["E", "F", "I"]
 fix = true
+
+[tool.ruff.lint.per-file-ignores]
+"browser_use/agent/prompts.py" = ["E501"]
+"browser_use/agent/message_manager/service.py" = ["E501"]
+"browser_use/agent/views.py" = ["E501"]
+"browser_use/browser/context.py" = ["E501"]
+"browser_use/controller/registry/service.py" = ["E501"]
+"browser_use/controller/service.py" = ["E501"]
+"browser_use/dom/tests/process_dom_test.py" = ["E501"]
+"browser_use/dom/views.py" = ["E501"]
+"examples/**" = ["E501"]
 
 [tool.ruff.format]
 quote-style = "single"

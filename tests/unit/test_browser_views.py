@@ -3,6 +3,7 @@ Unit tests for browser_use/browser/views.py
 
 Tests BrowserState, TabInfo, BrowserStateHistory, and related error types.
 """
+
 import pytest
 from pydantic import ValidationError
 

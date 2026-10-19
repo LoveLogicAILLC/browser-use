@@ -8,12 +8,10 @@ import asyncio
 from typing import Any, Dict, List, Optional
 from unittest.mock import AsyncMock, MagicMock
 
-from langchain_core.messages import AIMessage, HumanMessage
-from pydantic import BaseModel
+from langchain_core.messages import AIMessage
 
 from browser_use.agent.views import ActionResult, AgentHistory, AgentOutput
 from browser_use.browser.browser import BrowserConfig
-from browser_use.browser.context import BrowserContextConfig
 from browser_use.browser.views import BrowserState
 
 
@@ -24,7 +22,7 @@ class MockLLM:
 		"""Initialize with predefined responses.
 
 		Args:
-		    responses: List of responses to return in order
+			responses: List of responses to return in order
 		"""
 		self.responses = responses or []
 		self.call_count = 0
@@ -34,11 +32,11 @@ class MockLLM:
 		"""Mock async invoke that returns predefined responses.
 
 		Args:
-		    messages: Messages to process
-		    **kwargs: Additional arguments
+			messages: Messages to process
+			**kwargs: Additional arguments
 
 		Returns:
-		    AIMessage with predefined content
+			AIMessage with predefined content
 		"""
 		self.messages_received.append(messages)
 		if self.call_count < len(self.responses):
@@ -68,13 +66,13 @@ class MockBrowserState:
 		"""Create a mock browser state.
 
 		Args:
-		    url: Current URL
-		    title: Page title
-		    tabs: List of open tabs
-		    selector_map: Map of element indices to selectors
+			url: Current URL
+			title: Page title
+			tabs: List of open tabs
+			selector_map: Map of element indices to selectors
 
 		Returns:
-		    BrowserState instance for testing
+			BrowserState instance for testing
 		"""
 		return BrowserState(
 			url=url,
@@ -96,12 +94,12 @@ class MockActionResult:
 		"""Create a successful action result.
 
 		Args:
-		    content: Result content
-		    include_in_memory: Whether to include in agent memory
-		    is_done: Whether the task is complete
+			content: Result content
+			include_in_memory: Whether to include in agent memory
+			is_done: Whether the task is complete
 
 		Returns:
-		    ActionResult instance
+			ActionResult instance
 		"""
 		return ActionResult(extracted_content=content, include_in_memory=include_in_memory, is_done=is_done)
 
@@ -110,10 +108,10 @@ class MockActionResult:
 		"""Create an error action result.
 
 		Args:
-		    error_message: Error description
+			error_message: Error description
 
 		Returns:
-		    ActionResult instance with error
+			ActionResult instance with error
 		"""
 		return ActionResult(error=error_message, include_in_memory=True)
 
@@ -122,10 +120,10 @@ class MockActionResult:
 		"""Create a completion action result.
 
 		Args:
-		    content: Final result content
+			content: Final result content
 
 		Returns:
-		    ActionResult marking task as done
+			ActionResult marking task as done
 		"""
 		return ActionResult(extracted_content=content, is_done=True, include_in_memory=True)
 
@@ -134,18 +132,16 @@ class TestDataBuilder:
 	"""Builder pattern for creating complex test data."""
 
 	@staticmethod
-	def build_agent_history(
-		steps: int = 3, success: bool = True, final_result: Optional[str] = None
-	) -> List[AgentHistory]:
+	def build_agent_history(steps: int = 3, success: bool = True, final_result: Optional[str] = None) -> List[AgentHistory]:
 		"""Build a list of agent history entries.
 
 		Args:
-		    steps: Number of steps to create
-		    success: Whether actions were successful
-		    final_result: Final result if task completed
+			steps: Number of steps to create
+			success: Whether actions were successful
+			final_result: Final result if task completed
 
 		Returns:
-		    List of AgentHistory entries
+			List of AgentHistory entries
 		"""
 		history = []
 		for i in range(steps):
@@ -170,13 +166,13 @@ async def wait_for_condition(
 	"""Wait for a condition to be true with timeout.
 
 	Args:
-	    condition_fn: Function that returns True when condition is met
-	    timeout: Maximum time to wait in seconds
-	    interval: Time between checks in seconds
-	    error_msg: Error message if timeout occurs
+		condition_fn: Function that returns True when condition is met
+		timeout: Maximum time to wait in seconds
+		interval: Time between checks in seconds
+		error_msg: Error message if timeout occurs
 
 	Raises:
-	    TimeoutError: If condition not met within timeout
+		TimeoutError: If condition not met within timeout
 	"""
 	elapsed = 0.0
 	while elapsed < timeout:
@@ -191,11 +187,11 @@ def assert_action_type(action: Dict[str, Any], expected_type: str):
 	"""Assert that an action is of the expected type.
 
 	Args:
-	    action: Action dictionary
-	    expected_type: Expected action type (e.g., 'click_element')
+		action: Action dictionary
+		expected_type: Expected action type (e.g., 'click_element')
 
 	Raises:
-	    AssertionError: If action type doesn't match
+		AssertionError: If action type doesn't match
 	"""
 	assert expected_type in action, f'Expected action type {expected_type}, got {list(action.keys())}'
 
@@ -204,12 +200,12 @@ def assert_action_params(action: Dict[str, Any], action_type: str, expected_para
 	"""Assert that action parameters match expected values.
 
 	Args:
-	    action: Action dictionary
-	    action_type: Type of action (e.g., 'click_element')
-	    expected_params: Expected parameter values
+		action: Action dictionary
+		action_type: Type of action (e.g., 'click_element')
+		expected_params: Expected parameter values
 
 	Raises:
-	    AssertionError: If parameters don't match
+		AssertionError: If parameters don't match
 	"""
 	assert_action_type(action, action_type)
 	actual_params = action[action_type]
@@ -259,13 +255,13 @@ def create_mock_element(index: int, tag: str = 'button', text: str = 'Click me',
 	"""Create a mock DOM element.
 
 	Args:
-	    index: Element index in selector map
-	    tag: HTML tag name
-	    text: Element text content
-	    **attributes: Additional element attributes
+		index: Element index in selector map
+		tag: HTML tag name
+		text: Element text content
+		**attributes: Additional element attributes
 
 	Returns:
-	    Dictionary representing a DOM element
+		Dictionary representing a DOM element
 	"""
 	element = {
 		'id': index,

@@ -3,15 +3,13 @@ Unit tests for browser_use/telemetry/views.py and service.py
 
 Tests telemetry event models and the ProductTelemetry service behavior.
 """
-import os
+
 import pytest
-from unittest.mock import MagicMock, patch
 
 from browser_use.telemetry.views import (
 	AgentEndTelemetryEvent,
 	AgentRunTelemetryEvent,
 	AgentStepTelemetryEvent,
-	BaseTelemetryEvent,
 	ControllerRegisteredFunctionsTelemetryEvent,
 	RegisteredFunction,
 )
@@ -97,15 +95,14 @@ class TestProductTelemetryDisabled:
 	def test_capture_no_raises_with_disabled_client(self):
 		"""capture() should not raise even if _posthog_client is None."""
 		from browser_use.telemetry.service import ProductTelemetry
+
 		# Get existing singleton and temporarily set client to None
 		telemetry = ProductTelemetry()
 		original_client = telemetry._posthog_client
 		telemetry._posthog_client = None
 
 		try:
-			event = AgentStepTelemetryEvent(
-				agent_id='x', step=1, step_error=[], consecutive_failures=0, actions=[]
-			)
+			event = AgentStepTelemetryEvent(agent_id='x', step=1, step_error=[], consecutive_failures=0, actions=[])
 			# Should not raise when client is None
 			telemetry.capture(event)
 		finally:
@@ -114,6 +111,7 @@ class TestProductTelemetryDisabled:
 	def test_user_id_returns_string(self):
 		"""user_id property should return a non-empty string."""
 		from browser_use.telemetry.service import ProductTelemetry
+
 		t = ProductTelemetry()
 		uid = t.user_id
 		assert isinstance(uid, str)
@@ -122,14 +120,13 @@ class TestProductTelemetryDisabled:
 	def test_direct_capture_skips_when_no_client(self):
 		"""_direct_capture does nothing if _posthog_client is None."""
 		from browser_use.telemetry.service import ProductTelemetry
+
 		telemetry = ProductTelemetry()
 		original_client = telemetry._posthog_client
 		telemetry._posthog_client = None
 
 		try:
-			event = AgentStepTelemetryEvent(
-				agent_id='y', step=3, step_error=[], consecutive_failures=0, actions=[]
-			)
+			event = AgentStepTelemetryEvent(agent_id='y', step=3, step_error=[], consecutive_failures=0, actions=[])
 			# Should complete without error
 			telemetry._direct_capture(event)
 		finally:

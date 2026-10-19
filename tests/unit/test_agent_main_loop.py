@@ -7,25 +7,24 @@ Tests cover:
 - Main execution loop logic
 - History tracking
 """
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
 
+from unittest.mock import AsyncMock, MagicMock
+
+import pytest
 from langchain_core.messages import AIMessage
 
 from browser_use.agent.service import Agent
-from browser_use.agent.views import AgentBrain, AgentOutput
+from browser_use.agent.views import AgentBrain
 from browser_use.browser.views import BrowserState, TabInfo
 from browser_use.dom.views import DOMElementNode
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_browser_state(url: str = 'https://example.com') -> BrowserState:
-	root = DOMElementNode(
-		tag_name='html', is_visible=True, parent=None, xpath='', attributes={}, children=[]
-	)
+	root = DOMElementNode(tag_name='html', is_visible=True, parent=None, xpath='', attributes={}, children=[])
 	return BrowserState(
 		url=url,
 		title='Test Page',
@@ -86,14 +85,13 @@ def _mock_get_next_action(agent: Agent) -> None:
 	agent.get_next_action = _get_next_action_stub
 	# multi_act with empty actions returns [], so history is never written.
 	# Patch controller.multi_act to return a non-empty result.
-	agent.controller.multi_act = AsyncMock(
-		return_value=[ActionResult(extracted_content='ok', include_in_memory=True)]
-	)
+	agent.controller.multi_act = AsyncMock(return_value=[ActionResult(extracted_content='ok', include_in_memory=True)])
 
 
 # ---------------------------------------------------------------------------
 # Initialization tests (sync)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.unit
 class TestAgentInitialization:
@@ -131,6 +129,7 @@ class TestAgentInitialization:
 # ---------------------------------------------------------------------------
 # Step tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.unit
 @pytest.mark.asyncio
@@ -174,6 +173,7 @@ class TestAgentStep:
 # Run tests
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.unit
 @pytest.mark.asyncio
 class TestAgentRun:
@@ -216,6 +216,7 @@ class TestAgentRun:
 # ---------------------------------------------------------------------------
 # Error handling tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.unit
 @pytest.mark.asyncio

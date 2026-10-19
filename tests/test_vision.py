@@ -16,7 +16,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from langchain_openai import ChatOpenAI
 
-from browser_use import Agent, AgentHistoryList, Controller
+from browser_use import Agent, Controller
 
 llm = ChatOpenAI(model='gpt-4o')
 controller = Controller()
@@ -40,7 +40,11 @@ async def done(text: str) -> str:
 
 
 agent = Agent(
-	task='call explain_screen all the time the user asks you questions e.g. about the page like bbox which you see are labels  - your task is to expalin it and get the next question',
+	task=(
+		'call explain_screen all the time the user asks you questions'
+		' e.g. about the page like bbox which you see are labels'
+		' - your task is to expalin it and get the next question'
+	),
 	llm=llm,
 	controller=controller,
 	browser=Browser(config=BrowserConfig(disable_security=True, headless=False)),
@@ -49,4 +53,4 @@ agent = Agent(
 
 @pytest.mark.skip(reason='this is for local testing only')
 async def test_vision():
-	history: AgentHistoryList = await agent.run(20)
+	await agent.run(20)

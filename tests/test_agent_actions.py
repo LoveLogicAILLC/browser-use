@@ -104,15 +104,11 @@ async def test_error_recovery(llm, context):
 
 	actions_names = history.action_names()
 	actions = history.model_actions()
-	assert (
-		'go_to_url' in actions_names or 'open_tab' in actions_names
-	), f'{actions_names} does not contain go_to_url or open_tab'
+	assert 'go_to_url' in actions_names or 'open_tab' in actions_names, f'{actions_names} does not contain go_to_url or open_tab'
 	for action in actions:
 		if 'go_to_url' in action:
 			assert 'url' in action['go_to_url'], 'url is not in go_to_url'
-			assert action['go_to_url']['url'].endswith(
-				'google.com'
-			), 'url does not end with google.com'
+			assert action['go_to_url']['url'].endswith('google.com'), 'url does not end with google.com'
 			break
 
 
@@ -202,9 +198,8 @@ async def test_captcha_solver(llm, context, captcha: CaptchaTest):
 		llm=llm,
 		browser_context=context,
 	)
-	from browser_use.agent.views import AgentHistoryList
 
-	history: AgentHistoryList = await agent.run(max_steps=7)
+	await agent.run(max_steps=7)
 
 	state: BrowserState = await context.get_state()
 

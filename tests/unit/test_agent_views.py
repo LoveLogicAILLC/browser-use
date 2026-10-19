@@ -4,6 +4,7 @@ Unit tests for browser_use/agent/views.py
 Tests ActionResult, AgentBrain, AgentOutput, AgentHistory, AgentHistoryList,
 AgentStepInfo, AgentError.
 """
+
 import pytest
 from pydantic import ValidationError
 
@@ -119,6 +120,7 @@ class TestAgentStepInfo:
 class TestAgentError:
 	def test_format_validation_error(self):
 		from pydantic import ValidationError as PE
+
 		try:
 			AgentBrain(page_summary='', evaluation_previous_goal='')
 		except PE as e:
@@ -144,7 +146,6 @@ class TestAgentHistoryList:
 		assert hist.is_done() is False
 
 	def test_is_done_false_when_no_done_result(self):
-		from browser_use.agent.views import AgentOutput
 		from browser_use.controller.registry.views import ActionModel
 
 		state = _make_history_state()
@@ -163,7 +164,6 @@ class TestAgentHistoryList:
 		assert hist.is_done() is False
 
 	def test_is_done_true_when_done_result(self):
-		from browser_use.agent.views import AgentOutput
 		from browser_use.controller.registry.views import ActionModel
 
 		state = _make_history_state()
@@ -184,7 +184,6 @@ class TestAgentHistoryList:
 		assert hist.final_result() is None
 
 	def test_final_result_returns_last_done_content(self):
-		from browser_use.agent.views import AgentOutput
 		from browser_use.controller.registry.views import ActionModel
 
 		state = _make_history_state()

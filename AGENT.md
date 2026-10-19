@@ -120,8 +120,8 @@ Browser-Use is a Python library that enables AI agents to control web browsers t
 ```python
 @controller.registry.action('Description of action')
 async def my_action(param: str, browser: BrowserContext):
-    # Your implementation
-    return ActionResult(extracted_content="result")
+	# Your implementation
+	return ActionResult(extracted_content='result')
 ```
 
 ### 4. DOM Service (`browser_use/dom/service.py`)
@@ -167,13 +167,15 @@ async def my_action(param: str, browser: BrowserContext):
 from browser_use import Agent
 from langchain_openai import ChatOpenAI
 
+
 async def main():
-    agent = Agent(
-        task="Go to Amazon and find laptops under $1000",
-        llm=ChatOpenAI(model="gpt-4o"),
-    )
-    result = await agent.run()
-    print(result.final_result())
+	agent = Agent(
+		task='Go to Amazon and find laptops under $1000',
+		llm=ChatOpenAI(model='gpt-4o'),
+	)
+	result = await agent.run()
+	print(result.final_result())
+
 
 asyncio.run(main())
 ```
@@ -187,36 +189,34 @@ from browser_use.agent.views import ActionResult
 # Custom action
 controller = Controller()
 
+
 @controller.registry.action('Save data to file')
 async def save_to_file(data: str, filename: str):
-    with open(filename, 'w') as f:
-        f.write(data)
-    return ActionResult(extracted_content=f"Saved to {filename}")
+	with open(filename, 'w') as f:
+		f.write(data)
+	return ActionResult(extracted_content=f'Saved to {filename}')
+
 
 # Custom browser config
-browser = Browser(
-    config=BrowserConfig(
-        headless=False,
-        disable_security=True,
-        extra_chromium_args=['--start-maximized']
-    )
-)
+browser = Browser(config=BrowserConfig(headless=False, disable_security=True, extra_chromium_args=['--start-maximized']))
+
 
 # Structured output
 class ProductList(BaseModel):
-    products: List[str]
-    prices: List[float]
+	products: List[str]
+	prices: List[float]
+
 
 controller_with_output = Controller(output_model=ProductList)
 
 agent = Agent(
-    task="Find 5 laptops and return names and prices",
-    llm=ChatOpenAI(model="gpt-4o"),
-    browser=browser,
-    controller=controller_with_output,
-    use_vision=True,
-    max_failures=5,
-    validate_output=True
+	task='Find 5 laptops and return names and prices',
+	llm=ChatOpenAI(model='gpt-4o'),
+	browser=browser,
+	controller=controller_with_output,
+	use_vision=True,
+	max_failures=5,
+	validate_output=True,
 )
 
 result = await agent.run(max_steps=50)
@@ -229,21 +229,26 @@ products = ProductList.model_validate_json(result.final_result())
 from browser_use import Agent
 from browser_use.agent.prompts import SystemPrompt
 
+
 class PlannerPrompt(SystemPrompt):
-    def important_rules(self) -> str:
-        return super().important_rules() + """
-        
+	def important_rules(self) -> str:
+		return (
+			super().important_rules()
+			+ """
+
         ## Planning Rules
         - Break complex tasks into steps
         - Verify each step before proceeding
         - Document your reasoning
         """
+		)
+
 
 agent = Agent(
-    task="Research and compare 3 cloud providers",
-    llm=ChatOpenAI(model="gpt-4o"),
-    system_prompt_class=PlannerPrompt,
-    use_vision_for_planner=True
+	task='Research and compare 3 cloud providers',
+	llm=ChatOpenAI(model='gpt-4o'),
+	system_prompt_class=PlannerPrompt,
+	use_vision_for_planner=True,
 )
 ```
 
@@ -300,19 +305,19 @@ The agent automatically retries failed actions up to `max_failures` times:
 
 ```python
 agent = Agent(
-    task="...",
-    llm=llm,
-    max_failures=10,  # Increase retry limit
-    retry_delay=5      # Wait 5s between retries
+	task='...',
+	llm=llm,
+	max_failures=10,  # Increase retry limit
+	retry_delay=5,  # Wait 5s between retries
 )
 
 try:
-    result = await agent.run(max_steps=100)
+	result = await agent.run(max_steps=100)
 except Exception as e:
-    # Access partial history
-    print(agent.history)
-    # Save conversation for debugging
-    agent.save_conversation("debug.json")
+	# Access partial history
+	print(agent.history)
+	# Save conversation for debugging
+	agent.save_conversation('debug.json')
 ```
 
 ---
@@ -356,14 +361,7 @@ except Exception as e:
 ### Sensitive Data Masking
 
 ```python
-agent = Agent(
-    task="Login to example.com",
-    llm=llm,
-    sensitive_data={
-        'password': 'my_secret_password',
-        'api_key': 'sk-...'
-    }
-)
+agent = Agent(task='Login to example.com', llm=llm, sensitive_data={'password': 'my_secret_password', 'api_key': 'sk-...'})
 # Replaces secrets in prompts with [REDACTED]
 ```
 
@@ -371,10 +369,10 @@ agent = Agent(
 
 ```python
 browser = Browser(
-    config=BrowserConfig(
-        disable_security=False,  # Keep security enabled
-        chrome_instance_path=None  # Don't reuse existing sessions
-    )
+	config=BrowserConfig(
+		disable_security=False,  # Keep security enabled
+		chrome_instance_path=None,  # Don't reuse existing sessions
+	)
 )
 ```
 
@@ -383,9 +381,7 @@ browser = Browser(
 ```python
 from browser_use.browser.context import BrowserContextConfig
 
-config = BrowserContextConfig(
-    allowed_domains=['example.com', 'trusted-site.com']
-)
+config = BrowserContextConfig(allowed_domains=['example.com', 'trusted-site.com'])
 context = BrowserContext(browser=browser, config=config)
 ```
 
@@ -405,17 +401,14 @@ context = BrowserContext(browser=browser, config=config)
 
 # Disable:
 import os
+
 os.environ['ANONYMIZED_TELEMETRY'] = 'false'
 ```
 
 ### Conversation Logging
 
 ```python
-agent = Agent(
-    task="...",
-    llm=llm,
-    save_conversation_path="execution.json"
-)
+agent = Agent(task='...', llm=llm, save_conversation_path='execution.json')
 
 # Produces:
 # {
@@ -428,7 +421,7 @@ agent = Agent(
 ### GIF Generation
 
 ```python
-agent = Agent(task="...", llm=llm, generate_gif=True)
+agent = Agent(task='...', llm=llm, generate_gif=True)
 await agent.run()
 agent.create_history_gif()  # Creates history.gif
 ```
@@ -442,15 +435,14 @@ agent.create_history_gif()  # Creates history.gif
 ```python
 from tests.utils import MockLLM, MockBrowserState
 
+
 async def test_agent_step():
-    mock_llm = MockLLM(responses=[
-        '{"action": [{"go_to_url": {"url": "https://example.com"}}]}'
-    ])
-    
-    agent = Agent(task="test", llm=mock_llm)
-    await agent.step()
-    
-    assert mock_llm.call_count == 1
+	mock_llm = MockLLM(responses=['{"action": [{"go_to_url": {"url": "https://example.com"}}]}'])
+
+	agent = Agent(task='test', llm=mock_llm)
+	await agent.step()
+
+	assert mock_llm.call_count == 1
 ```
 
 ### Integration Testing
@@ -458,12 +450,9 @@ async def test_agent_step():
 ```python
 @pytest.mark.integration
 async def test_real_browser():
-    agent = Agent(
-        task="Go to example.com and get the title",
-        llm=ChatOpenAI(model="gpt-4o-mini")
-    )
-    result = await agent.run(max_steps=5)
-    assert "Example" in result.final_result()
+	agent = Agent(task='Go to example.com and get the title', llm=ChatOpenAI(model='gpt-4o-mini'))
+	result = await agent.run(max_steps=5)
+	assert 'Example' in result.final_result()
 ```
 
 ---
@@ -506,14 +495,18 @@ async def test_real_browser():
 ```python
 from browser_use.agent.prompts import SystemPrompt
 
+
 class CustomPrompt(SystemPrompt):
-    def important_rules(self) -> str:
-        return super().important_rules() + """
-        
+	def important_rules(self) -> str:
+		return (
+			super().important_rules()
+			+ """
+
         ## Custom Rules
         - Always verify data before proceeding
         - Log reasoning at each step
         """
+		)
 ```
 
 ### Custom Actions
@@ -525,10 +518,11 @@ See Controller section above.
 ```python
 from browser_use.dom.service import DomService
 
+
 class CustomDomService(DomService):
-    async def get_clickable_elements(self, page, viewport_expansion):
-        # Override DOM extraction logic
-        return custom_browser_state
+	async def get_clickable_elements(self, page, viewport_expansion):
+		# Override DOM extraction logic
+		return custom_browser_state
 ```
 
 ---

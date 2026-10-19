@@ -3,7 +3,9 @@ Unit tests for browser_use/dom/views.py
 
 Tests DOMTextNode, DOMElementNode methods (pure Python, no browser needed).
 """
+
 import pytest
+
 from browser_use.dom.views import DOMElementNode, DOMState, DOMTextNode, SelectorMap
 
 
@@ -242,9 +244,7 @@ class TestGetFileUploadElement:
 	def test_sibling_is_file_input(self):
 		grandparent = _make_element(tag='div')
 		btn = _make_element(tag='button', parent=grandparent)
-		file_input = _make_element(
-			tag='input', attributes={'type': 'file'}, parent=grandparent
-		)
+		file_input = _make_element(tag='input', attributes={'type': 'file'}, parent=grandparent)
 		grandparent.children.append(btn)
 		grandparent.children.append(file_input)
 		assert btn.get_file_upload_element() is file_input
@@ -260,9 +260,7 @@ class TestGetFileUploadElement:
 	def test_check_siblings_false_skips_siblings(self):
 		grandparent = _make_element(tag='div')
 		btn = _make_element(tag='button', parent=grandparent)
-		file_input = _make_element(
-			tag='input', attributes={'type': 'file'}, parent=grandparent
-		)
+		file_input = _make_element(tag='input', attributes={'type': 'file'}, parent=grandparent)
 		grandparent.children.append(btn)
 		grandparent.children.append(file_input)
 		# With check_siblings=False, siblings should NOT be checked

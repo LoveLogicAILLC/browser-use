@@ -157,13 +157,10 @@ Example:
 ```python
 from typing import Optional, List
 
-async def my_function(
-    param1: str,
-    param2: int = 0,
-    param3: Optional[List[str]] = None
-) -> bool:
-    """Function docstring here."""
-    pass
+
+async def my_function(param1: str, param2: int = 0, param3: Optional[List[str]] = None) -> bool:
+	"""Function docstring here."""
+	pass
 ```
 
 ### Docstrings
@@ -172,21 +169,21 @@ Use Google-style docstrings:
 
 ```python
 def function_name(arg1: str, arg2: int) -> bool:
-    """Brief description of what the function does.
+	"""Brief description of what the function does.
 
-    More detailed description if needed.
+	More detailed description if needed.
 
-    Args:
-        arg1: Description of arg1
-        arg2: Description of arg2
+	Args:
+	    arg1: Description of arg1
+	    arg2: Description of arg2
 
-    Returns:
-        Description of return value
+	Returns:
+	    Description of return value
 
-    Raises:
-        ValueError: When invalid input is provided
-    """
-    pass
+	Raises:
+	    ValueError: When invalid input is provided
+	"""
+	pass
 ```
 
 ---
@@ -227,25 +224,27 @@ tests/
 import pytest
 from tests.utils import MockLLM, MockBrowserState
 
+
 @pytest.mark.unit
 async def test_my_feature():
-    """Test description."""
-    # Arrange
-    mock_llm = MockLLM(responses=["test response"])
+	"""Test description."""
+	# Arrange
+	mock_llm = MockLLM(responses=['test response'])
 
-    # Act
-    result = await my_function(mock_llm)
+	# Act
+	result = await my_function(mock_llm)
 
-    # Assert
-    assert result is not None
-    assert mock_llm.call_count == 1
+	# Assert
+	assert result is not None
+	assert mock_llm.call_count == 1
+
 
 @pytest.mark.integration
 @pytest.mark.slow
 async def test_real_browser():
-    """Test with real browser (marked as slow)."""
-    # Test implementation
-    pass
+	"""Test with real browser (marked as slow)."""
+	# Test implementation
+	pass
 ```
 
 ### Test Guidelines
@@ -369,17 +368,16 @@ git push origin feature/your-feature-name
 ```python
 # Enable debug logging
 import logging
+
 logging.basicConfig(level=logging.DEBUG)
 
 # Use breakpoints
-import pdb; pdb.set_trace()
+import pdb
+
+pdb.set_trace()
 
 # Save agent history for inspection
-agent = Agent(
-    task="...",
-    llm=llm,
-    save_conversation_path="debug_conversation.json"
-)
+agent = Agent(task='...', llm=llm, save_conversation_path='debug_conversation.json')
 ```
 
 #### Testing Locally

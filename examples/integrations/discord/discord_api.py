@@ -17,24 +17,24 @@ class DiscordBot(commands.Bot):
 	Messages must start with the configured prefix (default: "$bu") followed by the task description.
 
 	Args:
-	    llm (BaseChatModel): Language model instance to use for task processing
-	    prefix (str, optional): Command prefix for triggering browser tasks. Defaults to "$bu"
-	    ack (bool, optional): Whether to acknowledge task receipt with a message. Defaults to False
-	    browser_config (BrowserConfig, optional): Browser configuration settings.
-	        Defaults to headless mode
+		llm (BaseChatModel): Language model instance to use for task processing
+		prefix (str, optional): Command prefix for triggering browser tasks. Defaults to "$bu"
+		ack (bool, optional): Whether to acknowledge task receipt with a message. Defaults to False
+		browser_config (BrowserConfig, optional): Browser configuration settings.
+			Defaults to headless mode
 
 	Usage:
-	    ```python
-	    from langchain_openai import ChatOpenAI
+		```python
+			from langchain_openai import ChatOpenAI
 
-	    llm = ChatOpenAI()
-	    bot = DiscordBot(llm=llm, prefix='$bu', ack=True)
-	    bot.run('YOUR_DISCORD_TOKEN')
-	    ```
+			llm = ChatOpenAI()
+			bot = DiscordBot(llm=llm, prefix='$bu', ack=True)
+			bot.run('YOUR_DISCORD_TOKEN')
+		```
 
 	Discord Usage:
-	    Send messages starting with the prefix:
-	    "$bu search for python tutorials"
+		Send messages starting with the prefix:
+		"$bu search for python tutorials"
 	"""
 
 	def __init__(
@@ -55,9 +55,7 @@ class DiscordBot(commands.Bot):
 		intents.members = True  # Enable members intent for user info
 
 		# Initialize the bot with a command prefix and intents.
-		super().__init__(
-			command_prefix='!', intents=intents
-		)  # You may not need prefix, just here for flexibility
+		super().__init__(command_prefix='!', intents=intents)  # You may not need prefix, just here for flexibility
 
 		# self.tree = app_commands.CommandTree(self) # Initialize command tree for slash commands.
 
@@ -65,7 +63,7 @@ class DiscordBot(commands.Bot):
 		"""Called when the bot is ready."""
 		try:
 			print(f'We have logged in as {self.user}')
-			cmds = await self.tree.sync()  # Sync the command tree with discord
+			await self.tree.sync()  # Sync the command tree with discord
 
 		except Exception as e:
 			print(f'Error during bot startup: {e}')
@@ -86,12 +84,8 @@ class DiscordBot(commands.Bot):
 						print(f'Error sending start message: {e}')
 
 				try:
-					agent_message = await self.run_agent(
-						message.content.replace(f'{self.prefix} ', '').strip()
-					)
-					await message.channel.send(
-						content=f'{agent_message}', reference=message, mention_author=True
-					)
+					agent_message = await self.run_agent(message.content.replace(f'{self.prefix} ', '').strip())
+					await message.channel.send(content=f'{agent_message}', reference=message, mention_author=True)
 				except Exception as e:
 					await message.channel.send(
 						content=f'Error during task execution: {str(e)}',

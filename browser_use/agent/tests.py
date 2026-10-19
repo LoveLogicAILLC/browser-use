@@ -88,7 +88,7 @@ def sample_history(action_registry):
 		AgentHistory(
 			model_output=AgentOutput(
 				current_state=AgentBrain(
-					page_summary="This is a sample page summary.",
+					page_summary='This is a sample page summary.',
 					evaluation_previous_goal='Clicked button',
 					memory='Button clicked',
 					next_goal='Extract content',
@@ -150,7 +150,7 @@ def test_final_result(sample_history: AgentHistoryList):
 
 
 def test_is_done(sample_history: AgentHistoryList):
-	assert sample_history.is_done() == True
+	assert sample_history.is_done()
 
 
 def test_urls(sample_history: AgentHistoryList):
@@ -167,12 +167,12 @@ def test_all_screenshots(sample_history: AgentHistoryList):
 
 def test_all_model_outputs(sample_history: AgentHistoryList):
 	outputs = sample_history.model_actions()
-	print(f"DEBUG: {outputs[0]}")
+	print(f'DEBUG: {outputs[0]}')
 	assert len(outputs) == 3
 	# get first key value pair
 	assert dict([next(iter(outputs[0].items()))]) == {'click_element': {'index': 1}}
-	assert dict([next(iter(outputs[1].items()))])  == {'extract_page_content': {'value': 'text'}}
-	assert dict([next(iter(outputs[2].items()))])  == {'done': {'text': 'Task completed'}}
+	assert dict([next(iter(outputs[1].items()))]) == {'extract_page_content': {'value': 'text'}}
+	assert dict([next(iter(outputs[2].items()))]) == {'done': {'text': 'Task completed'}}
 
 
 def test_all_model_outputs_filtered(sample_history: AgentHistoryList):
@@ -185,7 +185,7 @@ def test_empty_history():
 	empty_history = AgentHistoryList(history=[])
 	assert empty_history.last_action() is None
 	assert empty_history.final_result() is None
-	assert empty_history.is_done() == False
+	assert not empty_history.is_done()
 	assert len(empty_history.urls()) == 0
 
 

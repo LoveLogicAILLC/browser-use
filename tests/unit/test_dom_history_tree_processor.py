@@ -3,7 +3,9 @@ Unit tests for browser_use/dom/history_tree_processor/service.py
 
 Tests hashing, element search, and comparison operations.
 """
+
 import pytest
+
 from browser_use.dom.history_tree_processor.service import HistoryTreeProcessor
 from browser_use.dom.history_tree_processor.view import DOMHistoryElement
 from browser_use.dom.views import DOMElementNode
@@ -131,9 +133,7 @@ class TestFindHistoryElementInTree:
 	def test_returns_none_when_not_found(self):
 		root = _make_element(tag='html')
 		# Create a history element from a different button
-		other_button = _make_element(
-			tag='button', xpath='//other', attributes={'id': 'x'}, highlight_index=99
-		)
+		other_button = _make_element(tag='button', xpath='//other', attributes={'id': 'x'}, highlight_index=99)
 		history_el = HistoryTreeProcessor.convert_dom_element_to_history_element(other_button)
 
 		found = HistoryTreeProcessor.find_history_element_in_tree(history_el, root)
@@ -144,9 +144,7 @@ class TestFindHistoryElementInTree:
 class TestCompareHistoryAndDomElement:
 	def test_same_element_matches(self):
 		root = _make_element(tag='html')
-		button = _make_element(
-			tag='button', xpath='//button[@id="x"]', attributes={'id': 'x'}, parent=root, highlight_index=3
-		)
+		button = _make_element(tag='button', xpath='//button[@id="x"]', attributes={'id': 'x'}, parent=root, highlight_index=3)
 		history_el = HistoryTreeProcessor.convert_dom_element_to_history_element(button)
 
 		result = HistoryTreeProcessor.compare_history_element_and_dom_element(history_el, button)

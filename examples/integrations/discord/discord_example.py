@@ -16,7 +16,7 @@ Five Steps to create and invite a Discord bot:
 3. Enable Privileged Intents:
     *   Scroll down to the "Privileged Gateway Intents" section.
     *   Enable the necessary intents (e.g., "Server Members Intent" and "Message Content Intent").
-   -->  Note: Enabling privileged intents for bots in over 100 guilds requires bot verification. You may need to contact Discord support to enable privileged intents for verified bots.
+   -->  Note: Enabling privileged intents for bots in over 100 guilds requires bot verification. You may need to contact Discord support to enable privileged intents for verified bots.  # noqa: E501
 4. Generate Invite URL:
     *   Go to "OAuth2" tab and "OAuth2 URL Generator" section.
     *   Under "scopes", tick the "bot" checkbox.

@@ -7,7 +7,8 @@ async def test_full_screen(start_fullscreen: bool, maximize: bool):
 	async with async_playwright() as p:
 		try:
 			print('Attempting to connect to Chrome...')
-			# run in terminal: /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --no-first-run
+			# run in terminal:
+			# /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --no-first-run
 			browser = await p.chromium.connect_over_cdp(
 				'http://localhost:9222',
 				timeout=20000,  # 20 second timeout for connection

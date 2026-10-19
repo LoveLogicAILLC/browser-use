@@ -63,7 +63,7 @@ async def search_web(query: str):
 
 async def main():
 	task = (
-		'Go to this tiktok video url, open it and extract the @username from the resulting url. Then do a websearch for this username to find all his social media profiles. Return me the links to the social media profiles with the platform name.'
+		'Go to this tiktok video url, open it and extract the @username from the resulting url. Then do a websearch for this username to find all his social media profiles. Return me the links to the social media profiles with the platform name.'  # noqa: E501
 		' https://www.tiktokv.com/share/video/7470981717659110678/  '
 	)
 	model = ChatOpenAI(model='gpt-4o')

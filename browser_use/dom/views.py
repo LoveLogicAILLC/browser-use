@@ -34,7 +34,7 @@ class DOMTextNode(DOMBaseNode):
 class DOMElementNode(DOMBaseNode):
 	"""
 	xpath: the xpath of the element from the last root node (shadow root or iframe OR document if no shadow root or iframe).
-	To properly reference the element we need to recursively switch the root node until we find the element (work you way up the tree with `.parent`)
+	To properly reference the element we need to recursively switch the root node until we find the element (work you way up the tree with `.parent`)  # noqa: E501
 	"""
 
 	tag_name: str

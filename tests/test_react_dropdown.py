@@ -22,7 +22,8 @@ llm = ChatOpenAI(model='gpt-4o')
 
 agent = Agent(
 	task=(
-		'go to https://codepen.io/shyam-king/pen/ByBJoOv and select "Tiger" dropdown and read the text given in "Selected Animal" box (it can be empty as well)'
+		'go to https://codepen.io/shyam-king/pen/ByBJoOv and select "Tiger" dropdown'
+		' and read the text given in "Selected Animal" box (it can be empty as well)'
 	),
 	llm=llm,
 	browser_context=BrowserContext(

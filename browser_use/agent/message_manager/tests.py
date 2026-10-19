@@ -217,8 +217,6 @@ def test_token_overflow_handling_with_real_flow(message_manager: MessageManager,
 		assert f'step {i}' in messages[-1].content  # Should contain current step info
 
 		# Log token usage for debugging
-		token_usage = message_manager.history.total_tokens
-		token_limit = message_manager.max_input_tokens
 		# print(f'Step {i}: Using {token_usage}/{token_limit} tokens')
 
 		# go through all messages and verify that the token count and total tokens is correct

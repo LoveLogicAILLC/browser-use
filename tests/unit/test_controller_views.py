@@ -3,6 +3,7 @@ Unit tests for browser_use/controller/views.py
 
 Tests action input models for validation and field behavior.
 """
+
 import pytest
 from pydantic import ValidationError
 

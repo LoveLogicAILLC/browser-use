@@ -3,6 +3,7 @@ Unit tests for browser_use/controller/registry/views.py
 
 Tests RegisteredAction, ActionModel, ActionRegistry.
 """
+
 import pytest
 from pydantic import BaseModel
 

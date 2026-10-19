@@ -42,7 +42,7 @@ async def search_web(query: str):
 
 
 async def main():
-	task = 'use search_web to find the staff directory page of this team University of Northwestern-St. Paul http://unweagles.com Upper Midwest Athletic Conference retrun me only the link'
+	task = 'use search_web to find the staff directory page of this team University of Northwestern-St. Paul http://unweagles.com Upper Midwest Athletic Conference retrun me only the link'  # noqa: E501
 	model = ChatOpenAI(model='gpt-4o')
 	agent = Agent(task=task, llm=model, controller=controller)
 

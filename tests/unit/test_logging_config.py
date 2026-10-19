@@ -3,7 +3,9 @@ Unit tests for browser_use/logging_config.py
 
 Tests addLoggingLevel and setup_logging behavior.
 """
+
 import logging
+
 import pytest
 
 
@@ -32,7 +34,6 @@ class TestAddLoggingLevel:
 
 	def test_result_level_value(self):
 		"""RESULT level should be 35 after setup."""
-		import browser_use.logging_config  # triggers setup_logging via module import
 
 		assert hasattr(logging, 'RESULT')
 		assert logging.RESULT == 35

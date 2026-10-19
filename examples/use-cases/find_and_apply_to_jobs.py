@@ -1,35 +1,35 @@
 """
-Goal: Searches for job listings, evaluates relevance based on a CV, and applies 
+Goal: Searches for job listings, evaluates relevance based on a CV, and applies
 
 @dev You need to add OPENAI_API_KEY to your environment variables.
 Also you have to install PyPDF2 to read pdf files: pip install PyPDF2
 """
 
+import asyncio
 import csv
+import logging
 import os
 import sys
 from pathlib import Path
-import logging
-from typing import List, Optional
-import asyncio
+from typing import Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dotenv import load_dotenv
-from PyPDF2 import PdfReader
-from langchain_openai import AzureChatOpenAI, ChatOpenAI
+from langchain_openai import AzureChatOpenAI
 from pydantic import BaseModel, SecretStr
+from PyPDF2 import PdfReader
 
 from browser_use import ActionResult, Agent, Controller
-from browser_use.browser.context import BrowserContext
 from browser_use.browser.browser import Browser, BrowserConfig
+from browser_use.browser.context import BrowserContext
 
 # Validate required environment variables
 load_dotenv()
-required_env_vars = ["AZURE_OPENAI_KEY", "AZURE_OPENAI_ENDPOINT"]
+required_env_vars = ['AZURE_OPENAI_KEY', 'AZURE_OPENAI_ENDPOINT']
 for var in required_env_vars:
-    if not os.getenv(var):
-        raise ValueError(f"{var} is not set. Please add it to your environment variables.")
+	if not os.getenv(var):
+		raise ValueError(f'{var} is not set. Please add it to your environment variables.')
 
 logger = logging.getLogger(__name__)
 # full screen mode
@@ -77,7 +77,7 @@ def read_cv():
 
 
 @controller.action(
-	'Upload cv to element - call this function to upload if element is not found, try with different index of the same upload element',
+	'Upload cv to element - call this function to upload if element is not found, try with different index of the same upload element',  # noqa: E501
 )
 async def upload_cv(index: int, browser: BrowserContext):
 	path = str(CV.absolute())
@@ -138,7 +138,7 @@ async def main():
 		# ground_task + '\n' + 'Microsoft',
 		# ground_task
 		# + '\n'
-		# + 'go to https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/Taiwan%2C-Remote/Fulfillment-Analyst---New-College-Graduate-2025_JR1988949/apply/autofillWithResume?workerSubType=0c40f6bd1d8f10adf6dae42e46d44a17&workerSubType=ab40a98049581037a3ada55b087049b7 NVIDIA',
+		# + 'go to https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/Taiwan%2C-Remote/Fulfillment-Analyst---New-College-Graduate-2025_JR1988949/apply/autofillWithResume?workerSubType=0c40f6bd1d8f10adf6dae42e46d44a17&workerSubType=ab40a98049581037a3ada55b087049b7 NVIDIA',  # noqa: E501
 		# ground_task + '\n' + 'Meta',
 	]
 	model = AzureChatOpenAI(
@@ -156,5 +156,5 @@ async def main():
 	await asyncio.gather(*[agent.run() for agent in agents])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	asyncio.run(main())

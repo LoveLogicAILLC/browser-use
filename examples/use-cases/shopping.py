@@ -1,20 +1,22 @@
-from langchain_openai import ChatOpenAI
-from browser_use import Agent, Browser, BrowserConfig
-from dotenv import load_dotenv
-load_dotenv()
-
 import asyncio
 
-task="""
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+
+from browser_use import Agent, Browser
+
+load_dotenv()
+
+task = """
    ### Prompt for Shopping Agent – Migros Online Grocery Order
 
 **Objective:**  
-Visit [Migros Online](https://www.migros.ch/en), search for the required grocery items, add them to the cart, select an appropriate delivery window, and complete the checkout process using TWINT.
+Visit [Migros Online](https://www.migros.ch/en), search for the required grocery items, add them to the cart, select an appropriate delivery window, and complete the checkout process using TWINT.  # noqa: E501
 
 **Important:**
 - Make sure that you don't buy more than it's needed for each article.
 - After your search, if you click  the "+" button, it adds the item to the basket.
-- if you open the basket sidewindow menu, you can close it by clicking the X button on the top right. This will help you navigate easier.
+- if you open the basket sidewindow menu, you can close it by clicking the X button on the top right. This will help you navigate easier.  # noqa: E501
 ---
 
 ### Step 1: Navigate to the Website
@@ -72,7 +74,7 @@ At this stage, check the basket on the top right (indicates the price) and check
 ---
 
 ### Step 4: Adjusting for Minimum Order Requirement
-- If the total order **is below CHF 99**, add **a liquid soap refill** to reach the minimum. If it;s still you can buy some bread, dark chockolate.
+- If the total order **is below CHF 99**, add **a liquid soap refill** to reach the minimum. If it;s still you can buy some bread, dark chockolate.  # noqa: E501
 - At this step, check if you have bought MORE items than needed. If the price is more then CHF200, you MUST remove items.
 - If an item is not available, choose an alternative.
 - if an age verification is needed, remove alchoholic products, we haven't verified yet.
@@ -105,15 +107,17 @@ At this stage, check the basket on the top right (indicates the price) and check
 browser = Browser()
 
 agent = Agent(
-   task=task,
-    llm=ChatOpenAI(model="gpt-4o"),
-    browser=browser,
-    )
+	task=task,
+	llm=ChatOpenAI(model='gpt-4o'),
+	browser=browser,
+)
+
 
 async def main():
-    await agent.run()
-    input("Press Enter to close the browser...")
-    await browser.close()
+	await agent.run()
+	input('Press Enter to close the browser...')
+	await browser.close()
+
 
 if __name__ == '__main__':
-    asyncio.run(main())
+	asyncio.run(main())
