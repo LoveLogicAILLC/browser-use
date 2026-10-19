@@ -15,6 +15,8 @@ from browser_use.agent.service import Agent
 from browser_use.browser.browser import Browser, BrowserConfig
 from browser_use.utils import logger
 
+pytestmark = pytest.mark.skip(reason='integration test: requires Azure OpenAI credentials')
+
 # Constants
 MAX_STEPS = 50
 TEST_SUBSET_SIZE = 10
@@ -83,7 +85,7 @@ async def test_random_samples(test_cases: List[Dict[str, Any]], llm, context, va
 	samples = random.sample(test_cases, 1)
 
 	for i, case in enumerate(samples, 1):
-		task = f"Go to {case['website']}.com and {case['confirmed_task']}"
+		task = f'Go to {case["website"]}.com and {case["confirmed_task"]}'
 		logger.info(f'--- Random Sample {i}/{len(samples)} ---')
 		logger.info(f'Task: {task}\n')
 

@@ -3,6 +3,7 @@ import json
 import logging
 from typing import Callable, Dict, Optional, Type
 
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.prompts import PromptTemplate
 from lmnr import Laminar, observe
 from pydantic import BaseModel
@@ -25,7 +26,6 @@ from browser_use.controller.views import (
 from browser_use.utils import time_execution_async, time_execution_sync
 
 logger = logging.getLogger(__name__)
-from langchain_core.language_models.chat_models import BaseChatModel
 
 
 class Controller:
@@ -55,7 +55,7 @@ class Controller:
 
 		# Basic Navigation Actions
 		@self.registry.action(
-			'Search the query in Google in the current tab, the query should be a search query like humans search in Google, concrete and not vague or super long. More the single most important items. ',
+			'Search the query in Google in the current tab, the query should be a search query like humans search in Google, concrete and not vague or super long. More the single most important items. ',  # noqa: E501
 			param_model=SearchGoogleAction,
 		)
 		async def search_google(params: SearchGoogleAction, browser: BrowserContext):
@@ -96,7 +96,7 @@ class Controller:
 
 			# if element has file uploader then dont click
 			if await browser.is_file_uploader(element_node):
-				msg = f'Index {params.index} - has an element which opens file upload dialog. To upload files please use a specific function to upload files '
+				msg = f'Index {params.index} - has an element which opens file upload dialog. To upload files please use a specific function to upload files '  # noqa: E501
 				logger.info(msg)
 				return ActionResult(extracted_content=msg, include_in_memory=True)
 
@@ -162,7 +162,7 @@ class Controller:
 
 		# Content Actions
 		@self.registry.action(
-			'Extract page content to retrieve specific information from the page, e.g. all company names, a specifc description, all information about, links with companies in structured format or simply links',
+			'Extract page content to retrieve specific information from the page, e.g. all company names, a specifc description, all information about, links with companies in structured format or simply links',  # noqa: E501
 		)
 		async def extract_content(goal: str, browser: BrowserContext, page_extraction_llm: BaseChatModel):
 			page = await browser.get_current_page()
@@ -170,7 +170,7 @@ class Controller:
 
 			content = markdownify.markdownify(await page.content())
 
-			prompt = 'Your task is to extract the content of the page. You will be given a page and a goal and you should extract all relevant information around this goal from the page. If the goal is vague, summarize the page. Respond in json format. Extraction goal: {goal}, Page: {page}'
+			prompt = 'Your task is to extract the content of the page. You will be given a page and a goal and you should extract all relevant information around this goal from the page. If the goal is vague, summarize the page. Respond in json format. Extraction goal: {goal}, Page: {page}'  # noqa: E501
 			template = PromptTemplate(input_variables=['goal', 'page'], template=prompt)
 			try:
 				output = page_extraction_llm.invoke(template.format(goal=goal, page=content))
@@ -224,7 +224,7 @@ class Controller:
 
 		# send keys
 		@self.registry.action(
-			'Send strings of special keys like Backspace, Insert, PageDown, Delete, Enter, Shortcuts such as `Control+o`, `Control+Shift+T` are supported as well. This gets used in keyboard.press. Be aware of different operating systems and their shortcuts',
+			'Send strings of special keys like Backspace, Insert, PageDown, Delete, Enter, Shortcuts such as `Control+o`, `Control+Shift+T` are supported as well. This gets used in keyboard.press. Be aware of different operating systems and their shortcuts',  # noqa: E501
 			param_model=SendKeysAction,
 		)
 		async def send_keys(params: SendKeysAction, browser: BrowserContext):
@@ -363,8 +363,6 @@ class Controller:
 			logger.debug(f'Element attributes: {dom_element.attributes}')
 			logger.debug(f'Element tag: {dom_element.tag_name}')
 
-			xpath = '//' + dom_element.xpath
-
 			try:
 				frame_index = 0
 				for frame in page.frames:
@@ -410,7 +408,7 @@ class Controller:
 
 							# "label" because we are selecting by text
 							# nth(0) to disable error thrown by strict mode
-							# timeout=1000 because we are already waiting for all network events, therefore ideally we don't need to wait a lot here (default 30s)
+							# timeout=1000 because we are already waiting for all network events, therefore ideally we don't need to wait a lot here (default 30s)  # noqa: E501
 							selected_option_values = (
 								await frame.locator('//' + dom_element.xpath).nth(0).select_option(label=text, timeout=1000)
 							)

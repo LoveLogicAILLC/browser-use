@@ -1,0 +1,188 @@
+name: Security Scanning
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  bandit:
+    name: Bandit Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Bandit
+        run: |
+          pip install --only-binary :all: "bandit[toml]==1.7.10"
+
+      - name: Run Bandit scan
+        run: |
+          bandit -r browser_use -f json -o bandit-report.json
+        continue-on-error: true
+
+      - name: Display Bandit results
+        run: |
+          bandit -r browser_use -f screen
+        continue-on-error: true
+
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+        with:
+          name: bandit-report
+          path: bandit-report.json
+
+  safety:
+    name: Safety Dependency Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Safety
+        run: |
+          pip install --only-binary :all: "safety==3.2.9"
+
+      - name: Install package
+        run: pip install -e .  # NOSONAR
+
+      - name: Check dependencies with Safety
+        run: |
+          safety check --json --output safety-report.json
+        continue-on-error: true
+
+      - name: Display Safety results
+        run: |
+          safety check
+        continue-on-error: true
+
+      - name: Upload Safety report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+        with:
+          name: safety-report
+          path: safety-report.json
+
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@d0bae162f31f17dd92c46ccdc4dfee5710f8dc67  # v3
+        with:
+          languages: python
+          queries: security-extended,security-and-quality
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@d0bae162f31f17dd92c46ccdc4dfee5710f8dc67  # v3
+        with:
+          category: "/language:python"
+
+  secrets:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@0328a19a9d3877c9f04d0dbee5717aabff5b575d  # v3.82.6
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  semgrep:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+
+      - name: Run Semgrep
+        uses: returntocorp/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d  # v1
+        with:
+          config: >-
+            p/security-audit
+            p/python
+            p/owasp-top-ten
+        continue-on-error: true
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48  # v4.9.0
+        with:
+          fail-on-severity: moderate
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [bandit, safety, codeql, secrets, semgrep]
+    if: always()
+    permissions: {}
+
+    steps:
+      - name: Check security results
+        run: |
+          echo "Bandit: ${{ needs.bandit.result }}"
+          echo "Safety: ${{ needs.safety.result }}"
+          echo "CodeQL: ${{ needs.codeql.result }}"
+          echo "Secrets: ${{ needs.secrets.result }}"
+          echo "Semgrep: ${{ needs.semgrep.result }}"
+
+          if [[ "${{ needs.secrets.result }}" == "failure" ]]; then
+            echo "❌ Secret scanning failed - secrets detected!"
+            exit 1
+          fi
+
+          echo "✅ Security scans completed"

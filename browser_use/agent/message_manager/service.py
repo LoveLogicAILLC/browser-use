@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime
 from typing import Dict, List, Optional, Type
 
-from langchain_anthropic import ChatAnthropic
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import (
 	AIMessage,
@@ -14,7 +12,6 @@ from langchain_core.messages import (
 	SystemMessage,
 	ToolMessage,
 )
-from langchain_openai import ChatOpenAI
 
 from browser_use.agent.message_manager.views import MessageHistory, MessageMetadata
 from browser_use.agent.prompts import AgentMessagePrompt, SystemPrompt
@@ -95,12 +92,12 @@ class MessageManager:
 		]
 
 		example_tool_call = AIMessage(
-			content=f'',
+			content='',
 			tool_calls=tool_calls,
 		)
 		self._add_message_with_tokens(example_tool_call)
 		tool_message = ToolMessage(
-			content=f'Browser started',
+			content='Browser started',
 			tool_call_id=str(self.tool_id),
 		)
 		self._add_message_with_tokens(tool_message)
@@ -112,7 +109,7 @@ class MessageManager:
 
 	@staticmethod
 	def task_instructions(task: str) -> HumanMessage:
-		content = f'Your ultimate task is: """{task}""". If you achieved your ultimate task, stop everything and use the done action in the next step to complete the task. If not, continue as usual.'
+		content = f'Your ultimate task is: """{task}""". If you achieved your ultimate task, stop everything and use the done action in the next step to complete the task. If not, continue as usual.'  # noqa: E501
 		return HumanMessage(content=content)
 
 	def add_file_paths(self, file_paths: list[str]) -> None:
@@ -121,7 +118,7 @@ class MessageManager:
 		self._add_message_with_tokens(msg)
 
 	def add_new_task(self, new_task: str) -> None:
-		content = f'Your new ultimate task is: """{new_task}""". Take the previous context into account and finish your new ultimate task. '
+		content = f'Your new ultimate task is: """{new_task}""". Take the previous context into account and finish your new ultimate task. '  # noqa: E501
 		msg = HumanMessage(content=content)
 		self._add_message_with_tokens(msg)
 
@@ -296,7 +293,7 @@ class MessageManager:
 				f'proportion_to_remove: {proportion_to_remove}'
 			)
 		logger.debug(
-			f'Removing {proportion_to_remove * 100:.2f}% of the last message  {proportion_to_remove * msg.metadata.input_tokens:.2f} / {msg.metadata.input_tokens:.2f} tokens)'
+			f'Removing {proportion_to_remove * 100:.2f}% of the last message  {proportion_to_remove * msg.metadata.input_tokens:.2f} / {msg.metadata.input_tokens:.2f} tokens)'  # noqa: E501
 		)
 
 		content = msg.message.content
@@ -313,7 +310,7 @@ class MessageManager:
 		last_msg = self.history.messages[-1]
 
 		logger.debug(
-			f'Added message with {last_msg.metadata.input_tokens} tokens - total tokens now: {self.history.total_tokens}/{self.max_input_tokens} - total messages: {len(self.history.messages)}'
+			f'Added message with {last_msg.metadata.input_tokens} tokens - total tokens now: {self.history.total_tokens}/{self.max_input_tokens} - total messages: {len(self.history.messages)}'  # noqa: E501
 		)
 
 	def convert_messages_for_non_function_calling_models(self, input_messages: list[BaseMessage]) -> list[BaseMessage]:

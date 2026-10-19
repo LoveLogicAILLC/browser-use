@@ -13,6 +13,8 @@ from browser_use.controller.service import Controller
 # run with:
 # python -m pytest tests/test_excluded_actions.py -v -k "test_only_open_tab_allowed" --capture=no
 
+pytestmark = pytest.mark.skip(reason='integration test: requires Azure OpenAI credentials')
+
 
 @pytest.fixture(scope='session')
 def event_loop():

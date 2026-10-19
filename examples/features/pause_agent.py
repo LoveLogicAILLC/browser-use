@@ -16,7 +16,7 @@ class AgentController:
 	def __init__(self):
 		llm = ChatOpenAI(model='gpt-4o')
 		self.agent = Agent(
-			task='open in one action https://www.google.com, https://www.wikipedia.org, https://www.youtube.com, https://www.github.com, https://amazon.com',
+			task='open in one action https://www.google.com, https://www.wikipedia.org, https://www.youtube.com, https://www.github.com, https://amazon.com',  # noqa: E501
 			llm=llm,
 		)
 		self.running = False

@@ -1,3 +1,4 @@
+from inspect import signature as get_signature
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
 import pytest
@@ -91,7 +92,7 @@ class TestAgent:
 		mock_llm = MagicMock(spec=BaseChatModel)
 
 		# Mock the MessageManager
-		with patch('browser_use.agent.service.MessageManager') as mock_message_manager:
+		with patch('browser_use.agent.service.MessageManager'):
 			# Create an Agent instance with mocked dependencies
 			agent = Agent(task='Test task', llm=mock_llm)
 
@@ -122,7 +123,7 @@ class TestAgent:
 			assert len(agent._last_result) == 1
 			assert isinstance(agent._last_result[0], ActionResult)
 			assert 'Test error' in agent._last_result[0].error
-			assert agent._last_result[0].include_in_memory == True
+			assert agent._last_result[0].include_in_memory
 
 
 class TestRegistry:
@@ -183,15 +184,22 @@ class TestRegistry:
 		async def test_action_without_browser(param1: str):
 			return f'Action executed with {param1}'
 
-		# Register the actions
+		# Explicitly set __signature__ so inspect.signature() returns the real
+		# function's parameters — this is what the registry uses to detect 'browser'.
+		mock_with_browser = AsyncMock(side_effect=test_action_with_browser)
+		mock_with_browser.__signature__ = get_signature(test_action_with_browser)
+
+		mock_without_browser = AsyncMock(side_effect=test_action_without_browser)
+		mock_without_browser.__signature__ = get_signature(test_action_without_browser)
+
 		registry.registry.actions['test_action_with_browser'] = MagicMock(
-			function=AsyncMock(side_effect=test_action_with_browser),
+			function=mock_with_browser,
 			param_model=TestActionModel,
 			description='Test action with browser',
 		)
 
 		registry.registry.actions['test_action_without_browser'] = MagicMock(
-			function=AsyncMock(side_effect=test_action_without_browser),
+			function=mock_without_browser,
 			param_model=TestActionModel,
 			description='Test action without browser',
 		)

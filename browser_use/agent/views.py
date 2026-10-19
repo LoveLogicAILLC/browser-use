@@ -46,7 +46,7 @@ class AgentBrain(BaseModel):
 class AgentOutput(BaseModel):
 	"""Output model for agent
 
-	@dev note: this model is extended with custom actions in AgentService. You can also use some fields that are not in this model as provided by the linter, as long as they are registered in the DynamicActions model.
+	@dev note: this model is extended with custom actions in AgentService. You can also use some fields that are not in this model as provided by the linter, as long as they are registered in the DynamicActions model.  # noqa: E501
 	"""
 
 	model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -63,7 +63,7 @@ class AgentOutput(BaseModel):
 			action=(list[custom_actions], Field(...)),  # Properly annotated field with no default
 			__module__=AgentOutput.__module__,
 		)
-		model_.__doc__ = "AgentOutput model"
+		model_.__doc__ = 'AgentOutput model'
 		return model_
 
 
@@ -255,7 +255,6 @@ class AgentError:
 	@staticmethod
 	def format_error(error: Exception, include_trace: bool = False) -> str:
 		"""Format error message based on error type and optionally include trace"""
-		message = ''
 		if isinstance(error, ValidationError):
 			return f'{AgentError.VALIDATION_ERROR}\nDetails: {str(error)}'
 		if isinstance(error, RateLimitError):

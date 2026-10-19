@@ -18,7 +18,7 @@ llm = ChatGoogleGenerativeAI(model='gemini-2.0-flash-exp', api_key=SecretStr(api
 async def run_search():
 	agent = Agent(
 		task=(
-			'Go to url r/LocalLLaMA subreddit and search for "browser use" in the search bar and click on the first post and find the funniest comment'
+			'Go to url r/LocalLLaMA subreddit and search for "browser use" in the search bar and click on the first post and find the funniest comment'  # noqa: E501
 		),
 		llm=llm,
 		max_actions_per_step=4,

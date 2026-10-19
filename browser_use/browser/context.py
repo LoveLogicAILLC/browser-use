@@ -52,61 +52,61 @@ class BrowserContextConfig:
 	Configuration for the BrowserContext.
 
 	Default values:
-	    cookies_file: None
-	        Path to cookies file for persistence
+		cookies_file: None
+			Path to cookies file for persistence
 
-	        disable_security: False
-	                Disable browser security features
+			disable_security: False
+					Disable browser security features
 
-	    minimum_wait_page_load_time: 0.5
-	        Minimum time to wait before getting page state for LLM input
+		minimum_wait_page_load_time: 0.5
+			Minimum time to wait before getting page state for LLM input
 
-	        wait_for_network_idle_page_load_time: 1.0
-	                Time to wait for network requests to finish before getting page state.
-	                Lower values may result in incomplete page loads.
+			wait_for_network_idle_page_load_time: 1.0
+					Time to wait for network requests to finish before getting page state.
+					Lower values may result in incomplete page loads.
 
-	    maximum_wait_page_load_time: 5.0
-	        Maximum time to wait for page load before proceeding anyway
+		maximum_wait_page_load_time: 5.0
+			Maximum time to wait for page load before proceeding anyway
 
-	    wait_between_actions: 1.0
-	        Time to wait between multiple per step actions
+		wait_between_actions: 1.0
+			Time to wait between multiple per step actions
 
-	    browser_window_size: {
-	            'width': 1280,
-	            'height': 1100,
-	        }
-	        Default browser window size
+		browser_window_size: {
+				'width': 1280,
+				'height': 1100,
+			}
+			Default browser window size
 
-	    no_viewport: False
-	        Disable viewport
+		no_viewport: False
+			Disable viewport
 
-	    save_recording_path: None
-	        Path to save video recordings
+		save_recording_path: None
+			Path to save video recordings
 
-	    save_downloads_path: None
-	        Path to save downloads to
+		save_downloads_path: None
+			Path to save downloads to
 
-	    trace_path: None
-	        Path to save trace files. It will auto name the file with the TRACE_PATH/{context_id}.zip
+		trace_path: None
+			Path to save trace files. It will auto name the file with the TRACE_PATH/{context_id}.zip
 
-	    locale: None
-	        Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules. If not provided, defaults to the system default locale.
+		locale: None
+			Specify user locale, for example en-GB, de-DE, etc. Locale will affect navigator.language value, Accept-Language request header value as well as number and date formatting rules. If not provided, defaults to the system default locale.  # noqa: E501
 
-	    user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'
-	        custom user agent to use.
+		user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'  # noqa: E501
+			custom user agent to use.
 
-	    highlight_elements: True
-	        Highlight elements in the DOM on the screen
+		highlight_elements: True
+			Highlight elements in the DOM on the screen
 
-	    viewport_expansion: 500
-	        Viewport expansion in pixels. This amount will increase the number of elements which are included in the state what the LLM will see. If set to -1, all elements will be included (this leads to high token usage). If set to 0, only the elements which are visible in the viewport will be included.
+		viewport_expansion: 500
+			Viewport expansion in pixels. This amount will increase the number of elements which are included in the state what the LLM will see. If set to -1, all elements will be included (this leads to high token usage). If set to 0, only the elements which are visible in the viewport will be included.  # noqa: E501
 
-	    allowed_domains: None
-	        List of allowed domains that can be accessed. If None, all domains are allowed.
-	        Example: ['example.com', 'api.example.com']
+		allowed_domains: None
+			List of allowed domains that can be accessed. If None, all domains are allowed.
+			Example: ['example.com', 'api.example.com']
 
-	    include_dynamic_attributes: bool = True
-	        Include dynamic attributes in the CSS selector. If you want to reuse the css_selectors, it might be better to set this to False.
+		include_dynamic_attributes: bool = True
+			Include dynamic attributes in the CSS selector. If you want to reuse the css_selectors, it might be better to set this to False.  # noqa: E501
 	"""
 
 	cookies_file: str | None = None
@@ -384,7 +384,7 @@ class BrowserContext:
 			'alive',
 			# WebRTC and streaming
 			'webrtc',
-			'rtmp://',
+			'rtmp://',  # NOSONAR - pattern used for URL filtering, not creating a connection
 			'wss://',
 			# Common CDNs for dynamic content
 			'cloudfront.net',
@@ -548,7 +548,7 @@ class BrowserContext:
 				for allowed_domain in self.config.allowed_domains
 			)
 		except Exception as e:
-			logger.error(f'Error checking URL allowlist: {str(e)}')
+			logger.error(f'Error checking URL allowlist: {type(e).__name__}')
 			return False
 
 	async def _check_and_handle_navigation(self, page: Page) -> None:
@@ -790,10 +790,10 @@ class BrowserContext:
 		Creates a CSS selector for a DOM element, handling various edge cases and special characters.
 
 		Args:
-		        element: The DOM element to create a selector for
+				element: The DOM element to create a selector for
 
 		Returns:
-		        A valid CSS selector string
+				A valid CSS selector string
 		"""
 		try:
 			# Get base selector from XPath
@@ -929,7 +929,7 @@ class BrowserContext:
 					return element_handle
 				return None
 		except Exception as e:
-			logger.error(f'Failed to locate element: {str(e)}')
+			logger.error(f'Failed to locate element: {type(e).__name__}')
 			return None
 
 	async def _input_text_element_node(self, element_node: DOMElementNode, text: str):
@@ -942,7 +942,7 @@ class BrowserContext:
 			if element_node.highlight_index is not None:
 				await self._update_state(focus_element=element_node.highlight_index)
 
-			page = await self.get_current_page()
+			await self.get_current_page()
 			element_handle = await self.get_locate_element(element_node)
 
 			if element_handle is None:

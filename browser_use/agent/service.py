@@ -221,15 +221,15 @@ class Agent:
 
 	def _set_model_names(self) -> None:
 		self.chat_model_library = self.llm.__class__.__name__
-		self.model_name = "Unknown"
+		self.model_name = 'Unknown'
 		# Check for 'model_name' attribute first
-		if hasattr(self.llm, "model_name"):
+		if hasattr(self.llm, 'model_name'):
 			model = self.llm.model_name
-			self.model_name = model if model is not None else "Unknown"
+			self.model_name = model if model is not None else 'Unknown'
 		# Fallback to 'model' attribute if needed
-		elif hasattr(self.llm, "model"):
+		elif hasattr(self.llm, 'model'):
 			model = self.llm.model
-			self.model_name = model if model is not None else "Unknown"
+			self.model_name = model if model is not None else 'Unknown'
 
 		if self.planner_llm:
 			if hasattr(self.planner_llm, 'model_name'):
@@ -390,8 +390,7 @@ class Agent:
 		result: list[ActionResult],
 	) -> None:
 		"""Create and store history item"""
-		interacted_element = None
-		len_result = len(result)
+		len(result)
 
 		if model_output:
 			interacted_elements = AgentHistory.get_interacted_element(model_output, state.selector_map)
@@ -621,12 +620,12 @@ class Agent:
 		system_msg = (
 			f'You are a validator of an agent who interacts with a browser. '
 			f'Validate if the output of last action is what the user wanted and if the task is completed. '
-			f'If the task is unclear defined, you can let it pass. But if something is missing or the image does not show what was requested dont let it pass. '
+			f'If the task is unclear defined, you can let it pass. But if something is missing or the image does not show what was requested dont let it pass. '  # noqa: E501
 			f'Try to understand the page and help the model with suggestions like scroll, do x, ... to get the solution right. '
 			f'Task to validate: {self.task}. Return a JSON object with 2 keys: is_valid and reason. '
 			f'is_valid is a boolean that indicates if the output is correct. '
 			f'reason is a string that explains why it is valid or not.'
-			f' example: {{"is_valid": false, "reason": "The user wanted to search for "cat photos", but the agent searched for "dog photos" instead."}}'
+			f' example: {{"is_valid": false, "reason": "The user wanted to search for "cat photos", but the agent searched for "dog photos" instead."}}'  # noqa: E501
 		)
 
 		if self.browser_context.session:
@@ -646,6 +645,7 @@ class Agent:
 			"""
 			Validation results.
 			"""
+
 			is_valid: bool
 			reason: str
 
@@ -856,7 +856,7 @@ class Agent:
 							font_name = os.path.join(os.getenv('WIN_FONT_DIR', 'C:\\Windows\\Fonts'), font_name + '.ttf')
 					regular_font = ImageFont.truetype(font_name, font_size)
 					title_font = ImageFont.truetype(font_name, title_font_size)
-					goal_font = ImageFont.truetype(font_name, goal_font_size)
+					ImageFont.truetype(font_name, goal_font_size)
 					logger.debug(f'Loaded font: {font_name}')
 					font_loaded = True
 					break
@@ -870,8 +870,6 @@ class Agent:
 			logger.warning('Failed to load Unicode fonts, falling back to default')
 			regular_font = ImageFont.load_default()
 			title_font = ImageFont.load_default()
-
-			goal_font = regular_font
 
 		# Load logo if requested
 		logo = None
@@ -1148,17 +1146,16 @@ class Agent:
 
 		# Load fonts
 		try:
-			title_font = ImageFont.truetype('Arial.ttf', 36)  # Increased font size
+			ImageFont.truetype('Arial.ttf', 36)  # Increased font size
 			text_font = ImageFont.truetype('Arial.ttf', 24)  # Increased font size
 			number_font = ImageFont.truetype('Arial.ttf', 48)  # Increased font size for step number
-		except:
-			title_font = ImageFont.load_default()
+		except Exception:
+			ImageFont.load_default()
 			text_font = ImageFont.load_default()
 			number_font = ImageFont.load_default()
 
 		# Draw task text with increased spacing
 		margin = 80  # Increased margin
-		max_text_width = width - (2 * margin)
 
 		# Create rounded rectangle for goal text
 		text_padding = 20
