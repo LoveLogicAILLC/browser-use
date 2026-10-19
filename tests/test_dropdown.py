@@ -7,6 +7,8 @@ import pytest
 from browser_use.agent.service import Agent
 from browser_use.agent.views import AgentHistoryList
 
+pytestmark = pytest.mark.skip(reason='integration test: requires LLM credentials')
+
 
 @pytest.mark.asyncio
 async def test_dropdown(llm, browser_context):

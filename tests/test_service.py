@@ -183,15 +183,16 @@ class TestRegistry:
 		async def test_action_without_browser(param1: str):
 			return f'Action executed with {param1}'
 
-		# Register the actions
+		# Register the actions — spec= preserves the function signature so the
+		# registry's signature inspection correctly detects the 'browser' parameter.
 		registry.registry.actions['test_action_with_browser'] = MagicMock(
-			function=AsyncMock(side_effect=test_action_with_browser),
+			function=AsyncMock(spec=test_action_with_browser, side_effect=test_action_with_browser),
 			param_model=TestActionModel,
 			description='Test action with browser',
 		)
 
 		registry.registry.actions['test_action_without_browser'] = MagicMock(
-			function=AsyncMock(side_effect=test_action_without_browser),
+			function=AsyncMock(spec=test_action_without_browser, side_effect=test_action_without_browser),
 			param_model=TestActionModel,
 			description='Test action without browser',
 		)

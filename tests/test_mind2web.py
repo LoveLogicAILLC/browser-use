@@ -15,6 +15,8 @@ from browser_use.agent.service import Agent
 from browser_use.browser.browser import Browser, BrowserConfig
 from browser_use.utils import logger
 
+pytestmark = pytest.mark.skip(reason='integration test: requires Azure OpenAI credentials')
+
 # Constants
 MAX_STEPS = 50
 TEST_SUBSET_SIZE = 10

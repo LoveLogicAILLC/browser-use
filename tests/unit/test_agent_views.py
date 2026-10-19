@@ -121,11 +121,10 @@ class TestAgentError:
 	def test_format_validation_error(self):
 		from pydantic import ValidationError as PE
 
-		try:
+		with pytest.raises(PE) as exc_info:
 			AgentBrain(page_summary='', evaluation_previous_goal='')
-		except PE as e:
-			msg = AgentError.format_error(e)
-			assert AgentError.VALIDATION_ERROR in msg
+		msg = AgentError.format_error(exc_info.value)
+		assert AgentError.VALIDATION_ERROR in msg
 
 	def test_format_generic_error(self):
 		err = RuntimeError('Something broke')

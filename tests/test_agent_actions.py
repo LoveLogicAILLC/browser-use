@@ -11,6 +11,8 @@ from browser_use.agent.views import AgentHistoryList
 from browser_use.browser.browser import Browser, BrowserConfig
 from browser_use.browser.views import BrowserState
 
+pytestmark = pytest.mark.skip(reason='integration test: requires Azure OpenAI credentials')
+
 
 @pytest.fixture
 def llm():

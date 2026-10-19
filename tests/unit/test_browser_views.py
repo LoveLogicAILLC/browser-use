@@ -140,7 +140,6 @@ class TestBrowserErrors:
 		assert isinstance(err, Exception)
 
 	def test_url_not_allowed_inherits_from_browser_error(self):
-		try:
-			raise URLNotAllowedError('blocked')
-		except BrowserError as e:
-			assert str(e) == 'blocked'
+		err = URLNotAllowedError('blocked')
+		assert isinstance(err, BrowserError)
+		assert str(err) == 'blocked'

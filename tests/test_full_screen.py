@@ -1,6 +1,9 @@
 import asyncio
 
+import pytest
 from playwright.async_api import async_playwright
+
+pytestmark = pytest.mark.skip(reason='requires locally-running display and Chrome instance')
 
 
 async def test_full_screen(start_fullscreen: bool, maximize: bool):
