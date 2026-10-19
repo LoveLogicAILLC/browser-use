@@ -384,7 +384,7 @@ class BrowserContext:
 			'alive',
 			# WebRTC and streaming
 			'webrtc',
-			'rtmp://',
+			'rtmp://',  # NOSONAR - pattern used for URL filtering, not creating a connection
 			'wss://',
 			# Common CDNs for dynamic content
 			'cloudfront.net',
